@@ -27,10 +27,10 @@ infer_duration = function(
     run_stan = FALSE
 ) {
   components = list(
-    pa_model,
-    pt_model,
     survival_prior,
-    sensitivity_model
+    sensitivity_model,
+    pa_model,
+    pt_model
   )
 
   code = paste(
@@ -59,7 +59,8 @@ infer_duration = function(
     stan_args,
     list(
       model_code = code,
-      data = purrr::map(components, "data_args")
+      data = purrr::map(components, "data_args") |>
+        unlist(recursive = FALSE)
     )
   )
 

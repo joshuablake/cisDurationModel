@@ -40,7 +40,7 @@ pa_double_censor = function(l_b, r_b, l_e, r_e) {
       "\tfor (t in 1:Rdash[i]) {",
       "\t\tint max_positive = Udash[i] - t + 1;",
       "\t\tint min_positive = Ldash[i] - t + 1;",
-      "\t\tll_numerator[i] += S[min_positive] - S[max_positive];",
+      "\t\tll_numerator[i] += S[min_positive] - sensitivity * S[max_positive];",
       "\t}",
       "}"
     ),
