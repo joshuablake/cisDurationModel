@@ -55,3 +55,12 @@ test_that("inferring sensitivity compiles", {
     ) |>
       check_args_run()
 })
+
+test_that("hiearchical prior compiles", {
+  infer_duration(
+    pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
+    pt_model = pt_total(tS = rep(1, 4), mu_n = 4, r_n = 1),
+    survival_prior = surv_prior_informative_hiearchy(c(0, 1), matrix(c(2, 0.5, 0.5, 2), nrow = 2, ncol = 2), c(1, 1))
+  ) |>
+    check_args_run()
+})

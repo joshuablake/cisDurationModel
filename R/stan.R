@@ -70,3 +70,21 @@ infer_duration = function(
     return(args)
   }
 }
+
+# Utility function written by ChatGPT
+merge_lists = function(list1, list2) {
+  # Get all unique names
+  all_names <- unique(c(names(list1), names(list2)))
+
+  # Merge lists and concatenate elements with the same name
+  merged_list <- lapply(all_names, function(name) {
+    el1 <- if (name %in% names(list1)) list1[[name]] else NULL
+    el2 <- if (name %in% names(list2)) list2[[name]] else NULL
+    c(el1, el2)
+  })
+
+  # Assign names to the merged list
+  names(merged_list) <- all_names
+
+  return(merged_list)
+}
