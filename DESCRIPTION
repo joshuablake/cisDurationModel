@@ -2,14 +2,20 @@ Package: cisDurationModel
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Joshua",
+           family = "Blake",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "joshua.blake@mrc-bsu.cam.ac.uk",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
+Imports: 
+    purrr,
+    rstan
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
