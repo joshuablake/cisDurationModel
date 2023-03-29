@@ -36,3 +36,17 @@ test_that("basic model compiles", {
   S = rstan::extract(result, "S[1]")[[1]]
   expect_length(S, 3)
 })
+
+test_that("inferring sensitivity compiles", {
+  args = c(
+    infer_duration(
+      pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
+      pt_model = pt_individual(tS = matrix(rep(1, 8), nrow = 2, ncol = 4)),
+      sensitivity_model = infer_sensitivity(n_pos = 2, n_intermittent_neg = 3)
+    ),
+    iter = 5, chains = 1, refresh = 0, cores = 1, warmup = 2
+  )
+  result = do.call(rstan::stan, args)
+  S = rstan::extract(result, "sensitivity")[[1]]
+  expect_length(S, 3)
+})
