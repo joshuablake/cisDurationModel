@@ -24,11 +24,24 @@ test_that("utils basic characteristics", {
   expect_length(util_code, 1)
 })
 
-test_that("basic model compiles", {
+test_that("basic individual model compiles", {
   args = c(
     infer_duration(
       pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
       pt_model = pt_individual(tS = matrix(rep(1, 8), nrow = 2, ncol = 4))
+    ),
+    iter = 5, chains = 1, refresh = 0, cores = 1, warmup = 2
+  )
+  result = do.call(rstan::stan, args)
+  S = rstan::extract(result, "S[1]")[[1]]
+  expect_length(S, 3)
+})
+
+test_that("basic total model compiles", {
+  args = c(
+    infer_duration(
+      pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
+      pt_model = pt_total(tS = rep(1, 4), mu_n = 4, r_n = 1)
     ),
     iter = 5, chains = 1, refresh = 0, cores = 1, warmup = 2
   )

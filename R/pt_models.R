@@ -15,3 +15,21 @@ pt_individual = function(tS, mu_ni = 1, r_ni = 0) {
     )
   )
 }
+
+#' Likelihood contribution for the total model for p_t
+#'
+#' @param tS Vector of size max_S where element i is the contribution of S_i
+#' @param mu_n Prior mean for the negative binomial prior on n.
+#' @param r_n Prior size for the negative binomial prior on n.
+#' @export
+pt_total = function(tS, mu_n = 1, r_n = 0) {
+  list(
+    data_args = list(tS = tS),
+    data_code = list(
+      data = list("row_vector[max_S] tS;")
+    ),
+    model = list(
+      glue::glue("target += -lmultiply({r_n} + n_a, (sensitivity * {mu_n} * tS * S + {r_n}));")
+    )
+  )
+}
