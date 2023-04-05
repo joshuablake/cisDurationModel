@@ -3,7 +3,7 @@
 #' @param prev_neg times of the last negative test prior to each episode
 #' @param first_pos times of the first positive test of each episode
 #' @param last_pos times of the last positive test of each episode
-#' @param last_pos times of the first negative test following each episode
+#' @param first_neg times of the first negative test following each episode
 #' @export
 pa_double_censor = function(prev_neg, first_pos, last_pos, first_neg) {
   stopifnot(all.equal(length(prev_neg), length(first_pos), length(last_pos), length(first_pos)))
