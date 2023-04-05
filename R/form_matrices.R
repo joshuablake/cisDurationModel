@@ -1,5 +1,9 @@
 #' Creates the tS matrices needed for the pt models
 #'
+#' @param test_time_list A list where each element is a list of test times for an individual
+#' @param times The times where infections are allowed to occur
+#' @param max_S The maximal value of S that is allowed
+#' @param min_times A vector of times where individual's were able to be infected from, ordered the same as test_time_list
 #' @export
 form_tS_matrix = function(test_time_list, times, max_S, min_times = -Inf) {
   if (length(min_times) == 1) min_times = rep(min_times, length(test_time_list))
