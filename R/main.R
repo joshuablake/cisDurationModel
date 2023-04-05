@@ -1,3 +1,5 @@
+#' Currently unused function to read a global file of Stan functions
+#'
 #' @export
 get_util_stan_code = function() {
   # system.file("stan", "functions.stan", package = packageName()) |>
@@ -17,6 +19,15 @@ extract_component = function(components, component_name, indent = "\t") {
     paste(collapse = "\n")
 }
 
+#' Perform inference
+#'
+#' @param pa_model Model for the p_{ia}s
+#' @param pt_model Model for the p_{it}s
+#' @param survival_prior What prior to place on the survival/hazard
+#' @param sensitivity_model How to model the sensitivity over time
+#' @param stan_args A list of extra arguments to pass to `rstan::stan`
+#' @param run_stan Whether to run Stan or return a list of arguments
+#' @returns if run_stan is `FALSE`, a list of arguments ready to pass to `rstan::stan`; otherwise, the return value from said call
 #' @export
 infer_duration = function(
     pa_model,
