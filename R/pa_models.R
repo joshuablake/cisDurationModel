@@ -1,15 +1,24 @@
+#' A model for p_{ia} with double interval censored data
+#'
+#' @param prev_neg times of the last negative test prior to each episode
+#' @param first_pos times of the first positive test of each episode
+#' @param last_pos times of the last positive test of each episode
+#' @param last_pos times of the first negative test following each episode
 #' @export
-pa_double_censor = function(l_b, r_b, l_e, r_e) {
-  stopifnot(all.equal(length(l_b), length(r_b), length(l_e), length(r_b)))
-  n_a = length(l_b)
+pa_double_censor = function(prev_neg, first_pos, last_pos, first_neg) {
+  stopifnot(all.equal(length(prev_neg), length(first_pos), length(last_pos), length(first_pos)))
+  stopifnot(all(prev_neg < first_pos))
+  stopifnot(all(first_pos <= last_pos))
+  stopifnot(all(last_pos < first_neg))
+  n_a = length(prev_neg)
   list(
     data_args = list(
-      E = l_b,
-      R = r_b,
-      L = l_e,
-      U = r_e,
+      E = prev_neg,
+      R = first_pos,
+      L = last_pos,
+      U = first_neg,
       n_a = n_a,
-      max_S = max(r_e - l_b) + 1
+      max_S = max(first_neg - prev_neg) + 1
     ),
     data_code = list(
       "int<lower=0> n_a; // Number of episodes",
