@@ -4,9 +4,10 @@
 #' @param mu_ni Prior mean for the negative binomial prior on n_i
 #' @param r_ni Prior size for the negative binomial prior on n_i. Set to zero for an improper prior proportion to 1/n_i
 #' @export
-pt_individual = function(tS, mu_ni = 1, r_ni = 0) {
+pt_individual = function(tS_matrices, mu_ni = 1, r_ni = 0) {
+  stopifnot(length(tS_matrices) == 1)
   list(
-    data_args = list(tS = tS),
+    data_args = list(tS = tS_matrices[[1]]),
     data_code = list(
       data = list("matrix[n_a, max_S] tS;")
     ),
@@ -31,18 +32,18 @@ pt_total = function(tS_matrices, mu_n = 1, r_n = 0) {
         data = list("row_vector[max_S] tS;")
       ),
       transformed_parameters_code = list(
-        "one_minus_pt = sensitivity * tS1 * S;"
+        "one_minus_pt = sensitivity * tS * S;"
       )
     )
   } else {
     result = list(
       data_args = list(
-        tS1 = colMeans(tS_matrices[[1]])
+        tS1 = colMeans(tS_matrices[[1]]),
         tS2 = colMeans(tS_matrices[[2]])
       ),
       data_code = list(
         data = list(
-          "row_vector[max_S] tS1;"
+          "row_vector[max_S] tS1;",
           "row_vector[max_S] tS2;"
         )
       ),

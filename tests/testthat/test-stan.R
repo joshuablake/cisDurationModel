@@ -34,7 +34,7 @@ check_args_run = function(args) {
 test_that("basic individual model compiles", {
   infer_duration(
       pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
-      pt_model = pt_individual(tS = matrix(rep(1, 8), nrow = 2, ncol = 4))
+      pt_model = pt_individual(tS_matrices = list(matrix(rep(1, 8), nrow = 2, ncol = 4)))
   ) |>
     check_args_run()
 })
@@ -42,7 +42,7 @@ test_that("basic individual model compiles", {
 test_that("basic total model compiles", {
   infer_duration(
       pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
-      pt_model = pt_total(tS = rep(1, 4), mu_n = 4, r_n = 1)
+      pt_model = pt_total(tS_matrices = list(matrix(rep(1, 8), nrow = 2, ncol = 4)), mu_n = 4, r_n = 1)
     ) |>
       check_args_run()
 })
@@ -50,7 +50,7 @@ test_that("basic total model compiles", {
 test_that("inferring sensitivity compiles", {
   infer_duration(
       pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
-      pt_model = pt_individual(tS = matrix(rep(1, 8), nrow = 2, ncol = 4)),
+      pt_model = pt_individual(tS_matrices = list(matrix(rep(1, 8), nrow = 2, ncol = 4))),
       sensitivity_model = infer_sensitivity(n_pos = 2, n_intermittent_neg = 3)
     ) |>
       check_args_run()
@@ -59,8 +59,26 @@ test_that("inferring sensitivity compiles", {
 test_that("hiearchical prior compiles", {
   infer_duration(
     pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
-    pt_model = pt_total(tS = rep(1, 4), mu_n = 4, r_n = 1),
+    pt_model = pt_total(tS_matrices = list(matrix(rep(1, 8), nrow = 2, ncol = 4)), mu_n = 4, r_n = 1),
     survival_prior = surv_prior_informative_hiearchy(c(0, 1), matrix(c(2, 0.5, 0.5, 2), nrow = 2, ncol = 2), c(1, 1))
+  ) |>
+    check_args_run()
+})
+
+test_that("RW1 prior compiles", {
+  infer_duration(
+    pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
+    pt_model = pt_total(tS_matrices = list(matrix(rep(1, 8), nrow = 2, ncol = 4)), mu_n = 4, r_n = 1),
+    survival_prior = surv_prior_RW1_sigma_fixed()
+  ) |>
+    check_args_run()
+})
+
+test_that("Two tS_matrices compiles", {
+  infer_duration(
+    pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
+    pt_model = pt_total(tS_matrices = list(matrix(rep(1, 8), nrow = 2, ncol = 4), matrix(rep(2, 8), nrow = 2, ncol = 4)), mu_n = 4, r_n = 1),
+    survival_prior = surv_prior_RW1_sigma_fixed()
   ) |>
     check_args_run()
 })
