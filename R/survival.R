@@ -54,3 +54,34 @@ surv_prior_informative_hiearchy = function(logit_prior_mean, logit_prior_covar, 
     )
   )
 }
+
+#' @export
+surv_prior_RW1_sigma_fixed = function(lambda1_alpha = 0.1, lambda1_beta = 1.9, sigma = 0.1) {
+  list(
+    data_args = list(sigma_steps = sigma, lambda1_alpha = lambda1_alpha, lambda1_beta = lambda1_beta),
+    data_code = list(
+      "real<lower=0> sigma_steps;",
+      "real<lower=0> lambda1_alpha;",
+      "real<lower=0> lambda1_beta;"
+    ),
+    parameters = list(
+      "vector[max_S-2] z_logit_lambda_steps;",
+      "real<lower=0, upper=1> lambda1;"
+    ),
+    transformed_parameters_declare = list(
+      "vector [max_S-1] lambda;",
+      "vector[max_S] S;"
+    ),
+    transformed_parameters_code = c(
+      list(
+        "lambda[1] = lambda1;",
+        "lambda[2:max_S-1] = inv_logit(cumulative_sum(sigma_steps * z_logit_lambda_steps) + logit(lambda1));"
+      ),
+      base_survival[["transformed_parameters_code"]]
+    ),
+    model = list(
+      "lambda1 ~ beta(lambda1_alpha, lambda1_beta);",
+      "z_logit_lambda_steps ~ std_normal();"
+    )
+  )
+}
