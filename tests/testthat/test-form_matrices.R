@@ -149,3 +149,41 @@ test_that("simple case with min times, N=2", {
   expect_equal(dim(result), c(n_indiv, max_S))
   expect_equal(result, expected_result)
 })
+
+test_that("simple case with only testing after min time", {
+  n_indiv = 1
+  max_S = 6
+  test_time_list = list(c(1, 4, 7))
+  # times = 0:10
+  # tN_it = c(6:4, 4:1, rep(Inf, 4))
+  # stopifnot(length(tN_it) == length(times))
+  expected_result = matrix(0, ncol = max_S, nrow = n_indiv)
+  # stopifnot(sum(expected_result) == length(tN_it) - sum(tN_it == Inf))
+  result = form_tS_matrices(test_time_list, 0:10, max_S, min_times = 10, max_N = 2)
+  expect_equal(dim(result[[1]]), c(n_indiv, max_S))
+  expect_equal(result[[1]], expected_result)
+  expect_equal(dim(result[[2]]), c(n_indiv, max_S))
+  expect_equal(result[[2]], expected_result)
+})
+
+
+test_that("simple case with no tests", {
+  n_indiv = 2
+  max_S = 6
+  test_time_list = list(c(1, 4, 7), integer())
+  # times = 0:10
+  # tN_it = c(6:4, 4:1, rep(Inf, 4))
+  # stopifnot(length(tN_it) == length(times))
+  expected_result = matrix(c(3, 3, 2, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0),
+                           nrow = n_indiv, byrow = TRUE) / 11
+  # stopifnot(sum(expected_result) == length(tN_it) - sum(tN_it == Inf))
+  result = form_tS_matrices(test_time_list, 0:10, max_S, min_times = c(-Inf, 9), max_N = 2)
+  expect_equal(dim(result[[1]]), c(n_indiv, max_S))
+  expect_equal(result[[1]], expected_result)
+})
+
+test_that("disallow min_tests outside range", {
+  test_time_list = list(c(1, 4, 7))
+  expect_error(form_tS_matrices(test_time_list, 0:10, 6, min_times = 11))
+})

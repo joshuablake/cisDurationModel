@@ -9,6 +9,7 @@
 form_tS_matrices = function(test_time_list, times, max_S, min_times = -Inf, max_N = 1) {
   if (length(min_times) == 1) min_times = rep(min_times, length(test_time_list))
   stopifnot(length(min_times) == length(test_time_list))
+  stopifnot(all(min_times <= max(times)))
   counts = purrr::map2(
     test_time_list, min_times,
     ~create_tdNs_it(.x, times, max_S, .y, max_N) / length(times)
