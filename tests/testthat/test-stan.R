@@ -74,11 +74,21 @@ test_that("RW1 prior compiles", {
     check_args_run()
 })
 
-test_that("Two tS_matrices compiles", {
+test_that("Two tS_matrices compiles with total model", {
   infer_duration(
     pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
     pt_model = pt_total(tS_matrices = list(matrix(rep(1, 8), nrow = 2, ncol = 4), matrix(rep(2, 8), nrow = 2, ncol = 4)), mu_n = 4, r_n = 1),
-    survival_prior = surv_prior_RW1_sigma_fixed()
+    survival_prior = surv_prior_independent()
   ) |>
     check_args_run()
 })
+
+test_that("Two tS_matrices compiles with individual model", {
+  infer_duration(
+    pa_model = pa_double_censor(c(1, 1), c(2, 2), c(3, 3), c(4, 4)),
+    pt_model = pt_individual(tS_matrices = list(matrix(rep(1, 8), nrow = 2, ncol = 4), matrix(rep(2, 8), nrow = 2, ncol = 4)), mu_n = 4, r_n = 1),
+    survival_prior = surv_prior_independent()
+  ) |>
+    check_args_run()
+})
+
