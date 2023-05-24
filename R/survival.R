@@ -85,3 +85,41 @@ surv_prior_RW1_sigma_fixed = function(lambda1_alpha = 0.1, lambda1_beta = 1.9, s
     )
   )
 }
+
+#' @export
+surv_prior_RW2_sigma_fixed = function(
+    logit_lambda1_mean = -17.5,
+    logit_lambda1_sd = 6,
+    prior_gradient_mean = 1.09,
+    prior_gradient_sd = 0.03,
+    sigma = 0.1
+  ) {
+  list(
+    parameters = list(
+      "vector[max_S-3] z_logit_lambda_gradient;",
+      "real logit_lambda1;",
+      "real gradient1;"
+    ),
+    transformed_parameters_declare = list(
+      "vector[max_S-3] gradients;",
+      "vector[max_S-1] lambda;",
+      "vector[max_S] S;"
+    ),
+    transformed_parameters_code = c(
+      list(
+        glue::glue(
+          "gradients = inv_logit(cumulative_sum({sigma} * z_logit_lambda_gradient) + gradient1);"
+        ),
+        "lambda[1] = inv_logit(logit_lambda1);",
+        "lambda[2] = inv_logit(logit_lambda1 + gradient1);",
+        "lambda[3:max_S-1] = inv_logit(logit_lambda1 + gradient1 + cumulative_sum(gradients));"
+      ),
+      base_survival[["transformed_parameters_code"]]
+    ),
+    model = list(
+      glue::glue("logit_lambda1 ~ normal({logit_lambda1_mean}, {logit_lambda1_sd});"),
+      "z_logit_lambda_gradient ~ std_normal();",
+      glue::glue("gradient1 ~ normal({prior_gradient_mean}, {prior_gradient_sd});")
+    )
+  )
+}
