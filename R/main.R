@@ -37,6 +37,13 @@ infer_duration = function(
     stan_args = list(),
     run_stan = FALSE
 ) {
+  stopifnot(is.list(pa_model))
+  stopifnot(is.list(pt_model))
+  stopifnot(is.list(survival_prior))
+  stopifnot(is.list(sensitivity_model))
+  stopifnot(is.list(stan_args))
+  stopifnot(is.logical(run_stan))
+
   components = list(
     survival_prior,
     sensitivity_model,
