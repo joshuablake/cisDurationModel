@@ -1,13 +1,13 @@
 Package: cisDurationModel
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Estimate Duration from CIS-like Studies
+Version: 0.0.1
 Authors@R: 
     person(given = "Joshua",
            family = "Blake",
            role = c("aut", "cre"),
            email = "joshua.blake@mrc-bsu.cam.ac.uk",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           comment = c(ORCID = "0000-0001-7522-3741"))
+Description: This package contains a configurable model for estimating the duration of a disease from a CIS-like study. The model is based on a Bayesian framework and is implemented using the 'rstan' package. Priors and different types of false negatives can be specified.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

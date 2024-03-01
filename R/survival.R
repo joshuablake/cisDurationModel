@@ -9,6 +9,9 @@ base_survival = list(
   )
 )
 
+#' Place an independent prior on each hazard parameter
+#' 
+#' @param prior The prior to use, should be valid Stan code.
 #' @export
 surv_prior_independent = function(prior = "beta(0.1, 1.9)") {
   merge_lists(
@@ -17,6 +20,16 @@ surv_prior_independent = function(prior = "beta(0.1, 1.9)") {
   )
 }
 
+#' Use a two-level prior for the hazard
+#' 
+#' The first level is a multivariate normal prior for the logit of the hazard.
+#' The second level is a beta prior to weaken the normal prior.
+#' 
+#' @param logit_prior_mean The mean of the logit of the hazard
+#' @param logit_prior_covar The covariance matrix of the logit of the hazard
+#' @param c A vector controlling how much weight to give the informative prior. At infinity, the prior is the informative prior, at 0, the prior is the non-informative prior. The ith element is the weight for the ith hazard.
+#' @param alpha0 The alpha parameter of the beta prior for the second level in the absence of other information
+#' @param beta0 The beta parameter of the beta prior for the second level in the absence of other information
 #' @export
 surv_prior_informative_hiearchy = function(logit_prior_mean, logit_prior_covar, c,
                                            alpha0 = 0.1, beta0 = 1.9) {
@@ -55,6 +68,11 @@ surv_prior_informative_hiearchy = function(logit_prior_mean, logit_prior_covar, 
   )
 }
 
+#' Use a first-order random walk on the logit scale for the hazard, with a fixed standard deviation
+#' 
+#' @param lambda1_alpha The alpha parameter of the beta prior for the first hazard
+#' @param lambda1_beta The beta parameter of the beta prior for the first hazard
+#' @param sigma The standard deviation of the random walk
 #' @export
 surv_prior_RW1_sigma_fixed = function(lambda1_alpha = 0.1, lambda1_beta = 1.9, sigma = 0.1) {
   list(
@@ -86,6 +104,13 @@ surv_prior_RW1_sigma_fixed = function(lambda1_alpha = 0.1, lambda1_beta = 1.9, s
   )
 }
 
+#' Use a second-order random walk on the logit scale for the hazard, with an inferred standard deviation
+#' 
+#' @param prior The prior to use for the standard deviation of the random walk. Should be valid Stan code.
+#' @param logit_lambda1_mean The mean of the prior for the logit of the first hazard
+#' @param logit_lambda1_sd The standard deviation of the prior for the logit of the first hazard
+#' @param prior_gradient_mean The mean of the prior for the initial gradient of the random walk
+#' @param prior_gradient_sd The standard deviation of the prior for the initial gradient of the random walk
 #' @export
 surv_prior_RW2_sigma = function(
     prior,
@@ -124,6 +149,13 @@ surv_prior_RW2_sigma = function(
   )
 }
 
+#' Use a second-order random walk on the logit scale for the hazard, with a fixed standard deviation
+#' 
+#' @param logit_lambda1_mean The mean of the prior for the logit of the first hazard
+#' @param logit_lambda1_sd The standard deviation of the prior for the logit of the first hazard
+#' @param prior_gradient_mean The mean of the prior for the initial gradient of the random walk
+#' @param prior_gradient_sd The standard deviation of the prior for the initial gradient of the random walk
+#' @param sigma The standard deviation of the random walk
 #' @export
 surv_prior_RW2_sigma_fixed = function(
     logit_lambda1_mean = -17.5,
